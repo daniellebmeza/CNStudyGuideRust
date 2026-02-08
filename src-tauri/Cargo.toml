@@ -1,6 +1,6 @@
 [package]
 name = "cn_study_guide_rust"
-version = "0.1.4"
+version = "0.1.5"
 description = "CN Study Guide"
 authors = ["CN Study Guide"]
 edition = "2021"
