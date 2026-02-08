@@ -21,6 +21,10 @@
     "bundle": {
       "active": true,
       "identifier": "com.cn.studyguide",
+      "icon": [
+        "icons/icon.ico",
+        "icons/icon.png"
+      ],
       "resources": [
         "resources/CN study guide - Sheet2.csv"
       ]
