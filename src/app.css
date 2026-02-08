@@ -1,0 +1,332 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Sora:wght@300;400;600&display=swap");
+
+:root {
+    --bg-top: #f5eee3;
+    --bg-bottom: #e3d2bb;
+    --ink: #2c2a27;
+    --muted: #6c6357;
+    --card: #fff8ee;
+    --accent: #cc5a3c;
+    --accent-deep: #9a3f2a;
+    --accent-2: #2f6f6b;
+    --border: rgba(44, 42, 39, 0.2);
+    --shadow: 0 22px 40px rgba(35, 28, 20, 0.18);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Sora", "Trebuchet MS", sans-serif;
+    color: var(--ink);
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(255, 255, 255, 0.7),
+            transparent 55%
+        ),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+#root {
+    width: 100%;
+}
+
+.app_shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+}
+
+.panel {
+    width: min(880px, 100%);
+    background: rgba(255, 250, 242, 0.85);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 36px 40px 40px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.title {
+    font-family: "Fraunces", "Georgia", serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    margin: 0;
+}
+
+.subtitle {
+    color: var(--muted);
+    margin-top: 10px;
+    font-size: 1.05rem;
+}
+
+.level_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(47, 111, 107, 0.12);
+    color: var(--accent-2);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+
+.button_row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.button {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none;
+}
+
+.button--primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 12px 18px rgba(204, 90, 60, 0.35);
+}
+
+.button--primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 24px rgba(204, 90, 60, 0.4);
+}
+
+.button--ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--ink);
+}
+
+.button--ghost:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.button--subtle {
+    background: rgba(47, 111, 107, 0.12);
+    color: var(--accent-2);
+}
+
+.section {
+    margin-top: 24px;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 26px;
+    border: 1px solid var(--border);
+    box-shadow: 0 14px 22px rgba(32, 26, 20, 0.12);
+}
+
+.flashcard_host {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.flashcard_meta {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.flashcard_host .flashcard-array-wrapper {
+    width: min(560px, 100%);
+}
+
+.flashcard_host .flashcard-wrapper {
+    width: min(560px, 100%);
+    height: 320px;
+    --front-bg: var(--card);
+    --back-bg: #fffaf2;
+    --box-shadow: var(--shadow);
+    --border-radius: 22px;
+}
+
+.flashcard_host .flashcard-array {
+    height: 320px;
+}
+
+.flashcard_host .flashcard__front,
+.flashcard_host .flashcard__back {
+    border: 1px solid var(--border);
+    color: var(--ink);
+}
+
+.flashcard_host .flashcard-array__progress-bar {
+    width: min(520px, 100%);
+    background: rgba(47, 111, 107, 0.16);
+}
+
+.flashcard_host .flashcard-array__progress-bar-fill {
+    background: var(--accent);
+}
+
+.deck_face {
+    height: 100%;
+    width: 100%;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.deck_title {
+    font-family: "Fraunces", "Georgia", serif;
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+}
+
+.deck_label {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.deck_value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.deck_value--body {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.card_prompt {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 0 0 18px;
+}
+
+.option_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.option_button {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    cursor: pointer;
+    animation: rise 0.4s ease both;
+}
+
+.option_button--selected {
+    border-color: var(--accent);
+    box-shadow: 0 10px 18px rgba(204, 90, 60, 0.2);
+}
+
+.option_button:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.counter {
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.flip_hint {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-top: 12px;
+}
+
+.summary_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.summary_tile {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+.fade_in {
+    animation: fade_in 0.5s ease both;
+}
+
+@keyframes fade_in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 640px) {
+    .panel {
+        padding: 28px 22px 30px;
+    }
+
+    .button_row {
+        flex-direction: column;
+    }
+
+    .flashcard_host .flashcard-wrapper,
+    .flashcard_host .flashcard-array {
+        height: 260px;
+    }
+}

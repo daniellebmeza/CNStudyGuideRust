@@ -1,0 +1,32 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devPath": "http://localhost:5173",
+    "distDir": "../dist"
+  },
+  "package": {
+    "productName": "CN Study Guide",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "windows": [
+      {
+        "title": "CN Study Guide",
+        "width": 960,
+        "height": 720,
+        "resizable": true
+      }
+    ],
+    "bundle": {
+      "active": true,
+      "identifier": "com.cn.studyguide",
+      "resources": [
+        "resources/CN study guide - Sheet2.csv"
+      ]
+    },
+    "allowlist": {
+      "all": false
+    }
+  }
+}

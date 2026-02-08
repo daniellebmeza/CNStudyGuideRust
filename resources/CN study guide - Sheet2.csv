@@ -1,0 +1,13 @@
+Name,Type,Fuction,Role in swallowing
+CN I  Olfactory,Sensory,cerebrum; smell,none
+CN II Optic,Sensory,cerebrum; vision,none
+CN III Oculomotor,Motor,"midbrain; eye motion (during gaze), eyelid elevation",none
+CN IV Trochlear,Motor,midbrain; oblique eye motion,none
+CN V Trigeminal,Both,pons; motor control of jaw/ somatosensation from face and tongue,motor control for mastication in oral prep phase and oral sensory feedback in oral phrase
+CN VI Abducens,Motor,pons; lateral eye movement,none
+CN VII Facial,Both,pons; motor control of face and lips/ taste,bolus containment and tongue sensory input in oral prep phase
+CN VIII Vestibulocochlear,Sensory,pons; hearing,none
+CN IX Glossopharnygeal,Both,"medulla; motor control of pharynx/ somatosensation from tongue, pharynx (gag reflex), saliva, taste",sensory trigger for pharyngeal phase and elevates the pharynx
+CN X Vagus,Both,"medulla; motor control of pharynx and larynx (gag reflex), motor control of tongue/ somatosensation and visceral sensation from parts of pharynx and larynx, taste","motor innervation to soft palate elevation, pharyngeal contraction, and laryngeal closure in pharyngeal phase; sensory innervation to the larynx and pharynx in pharyngeal phase"
+CN XI Accessory,Motor,medulla; muscles of neck and shoulders,none
+CN XII Hypoglossal,Motor,medulla; motor control of tongue,posterior tongue depression in oral preparatory phase and tongue base retraction in pharyngeal phase
