@@ -114,7 +114,8 @@ jobs:
             fi
           done
 
-      - name: build and publish
+      - name: build and publish (macOS)
+        if: runner.os == 'macOS'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -130,3 +131,17 @@ jobs:
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: false
+          args: --bundles app
+
+      - name: build and publish (Windows)
+        if: runner.os == 'Windows'
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ needs.bump.outputs.tag }}
+          releaseName: "App v${{ needs.bump.outputs.version }}"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: true
+          prerelease: false
+          args: --bundles msi,nsis

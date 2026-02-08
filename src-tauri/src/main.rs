@@ -2,33 +2,61 @@
 
 mod study;
 
+use std::io::Cursor;
+use std::path::PathBuf;
+
 use study::{
     build_level1_round, build_level2_round, build_level3_round, load_entries_from_path,
+    load_entries_from_reader,
     Level1Round, Level2Round, Level3Round, StudyEntry,
 };
 
+const CSV_FILE_NAME: &str = "CN study guide - Sheet2.csv";
+const CSV_RESOURCE_PATH: &str = "resources/CN study guide - Sheet2.csv";
+const EMBEDDED_CSV: &[u8] = include_bytes!("../resources/CN study guide - Sheet2.csv");
+
 #[tauri::command]
 fn load_entries(app_handle: tauri::AppHandle) -> Result<Vec<StudyEntry>, String> {
-    let file_name = "CN study guide - Sheet2.csv";
-    let resource_path = app_handle.path_resolver().resolve_resource(file_name);
-    if let Some(path) = resource_path {
+    let mut attempted_paths: Vec<String> = Vec::new();
+
+    for resource_name in [CSV_FILE_NAME, CSV_RESOURCE_PATH] {
+        if let Some(path) = app_handle.path_resolver().resolve_resource(resource_name) {
+            attempted_paths.push(path.display().to_string());
+            if path.exists() {
+                return load_entries_from_path(&path);
+            }
+        } else {
+            attempted_paths.push(format!("resolve_resource({}) -> <none>", resource_name));
+        }
+    }
+
+    let mut dev_paths = vec![
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("resources")
+            .join(CSV_FILE_NAME),
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(CSV_FILE_NAME),
+    ];
+
+    if let Ok(cwd) = std::env::current_dir() {
+        dev_paths.push(cwd.join(CSV_FILE_NAME));
+        dev_paths.push(cwd.join("src-tauri").join("resources").join(CSV_FILE_NAME));
+        dev_paths.push(cwd.join("src-tauri").join(CSV_FILE_NAME));
+    }
+
+    for path in dev_paths {
+        attempted_paths.push(path.display().to_string());
         if path.exists() {
             return load_entries_from_path(&path);
         }
     }
 
-    let dev_path = std::env::current_dir()
-        .map_err(|err| format!("Failed to resolve current directory: {}", err))?
-        .join(file_name);
-    if dev_path.exists() {
-        return load_entries_from_path(&dev_path);
-    }
-
-    Err(format!(
-        "CSV file not found. Expected resource '{}' or dev path '{}'.",
-        file_name,
-        dev_path.display()
-    ))
+    load_entries_from_reader(Cursor::new(EMBEDDED_CSV)).map_err(|err| {
+        format!(
+            "CSV file not found from disk paths and embedded fallback failed: {}. Attempted: {}",
+            err,
+            attempted_paths.join(", ")
+        )
+    })
 }
 
 #[tauri::command]
