@@ -1,0 +1,86 @@
+name: release-on-main
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump:
+    if: github.actor != 'github-actions[bot]' && (github.event.head_commit == null || !contains(github.event.head_commit.message, '[skip ci]'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+      tag: ${{ steps.bump.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: bump version and tag
+        id: bump
+        run: |
+          npm version patch --no-git-tag-version
+          node -e "const fs=require('fs');const version=require('./package.json').version;const tauriPath='src-tauri/tauri.conf.json';const tauri=JSON.parse(fs.readFileSync(tauriPath,'utf8'));tauri.package.version=version;fs.writeFileSync(tauriPath, JSON.stringify(tauri, null, 2));const cargoPath='src-tauri/Cargo.toml';const lines=fs.readFileSync(cargoPath,'utf8').split(/\\r?\\n/);let inPackage=false;for(let i=0;i<lines.length;i++){const line=lines[i].trim();if(line.startsWith('[')){inPackage=line==='[package]';}else if(inPackage && line.startsWith('version =')){lines[i]=`version = \"${version}\"`;}}fs.writeFileSync(cargoPath, lines.join('\\n'));"
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=app-v$VERSION" >> $GITHUB_OUTPUT
+          git add package.json package-lock.json src-tauri/tauri.conf.json src-tauri/Cargo.toml
+          git commit -m "chore(release): v$VERSION [skip ci]"
+          git tag "app-v$VERSION"
+          git push origin HEAD:main --tags
+
+  build-release:
+    needs: bump
+    if: needs.bump.outputs.tag != ''
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "macos-14"
+          - platform: "macos-13"
+          - platform: "windows-latest"
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.bump.outputs.tag }}
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: install frontend dependencies
+        run: npm ci
+
+      - name: build and publish
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ needs.bump.outputs.tag }}
+          releaseName: "App v${{ needs.bump.outputs.version }}"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: true
+          prerelease: false
