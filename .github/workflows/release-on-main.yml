@@ -34,7 +34,30 @@ jobs:
         id: bump
         run: |
           npm version patch --no-git-tag-version
-          node -e "const fs=require('fs');const version=require('./package.json').version;const tauriPath='src-tauri/tauri.conf.json';const tauri=JSON.parse(fs.readFileSync(tauriPath,'utf8'));tauri.package.version=version;fs.writeFileSync(tauriPath, JSON.stringify(tauri, null, 2));const cargoPath='src-tauri/Cargo.toml';const lines=fs.readFileSync(cargoPath,'utf8').split(/\\r?\\n/);let inPackage=false;for(let i=0;i<lines.length;i++){const line=lines[i].trim();if(line.startsWith('[')){inPackage=line==='[package]';}else if(inPackage && line.startsWith('version =')){lines[i]=`version = \"${version}\"`;}}fs.writeFileSync(cargoPath, lines.join('\\n'));"
+          node <<'NODE'
+          const fs = require("fs");
+          const version = require("./package.json").version;
+
+          const tauriPath = "src-tauri/tauri.conf.json";
+          const tauri = JSON.parse(fs.readFileSync(tauriPath, "utf8"));
+          tauri.package.version = version;
+          fs.writeFileSync(tauriPath, JSON.stringify(tauri, null, 2));
+
+          const cargoPath = "src-tauri/Cargo.toml";
+          const lines = fs.readFileSync(cargoPath, "utf8").split(/\r?\n/);
+          let inPackage = false;
+
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line.startsWith("[")) {
+              inPackage = line === "[package]";
+            } else if (inPackage && line.startsWith("version =")) {
+              lines[i] = `version = "${version}"`;
+            }
+          }
+
+          fs.writeFileSync(cargoPath, lines.join("\n"));
+          NODE
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag=app-v$VERSION" >> $GITHUB_OUTPUT
